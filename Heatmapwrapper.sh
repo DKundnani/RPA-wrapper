@@ -4,28 +4,9 @@
 ###########################################################
 #Get mono, di and tri nucleotide frequencies from BED files overlapping a range file(bed format)
 #Usage: source ./Heatmapwrapper.sh
-#split_by_subtypes ~/p-fstorici3-0/rich_project_bio-storici/HEKnH9/anno/subtypes/sorted_finalcpganno_requiredchr.bed 7
+#split_by_subtypes ranges.bed columnusedtosplit
 
-#Following script needs to be run from the required output folder
-
-#for bed in $(ls ~/p-fstorici3-0/rich_project_bio-storici/HEKnH9/anno/subtypes/*.bed); do
-#bg_freq ~/p-fstorici3-0/rich_project_bio-storici/bin/RibosePreferenceAnalysis/ ~/p-fstorici3-0/rich_project_bio-storici/reference/hg38/filtered_hg38.fa ${bed} 
-#sample_freq ~/p-fstorici3-0/rich_project_bio-storici/bin/RibosePreferenceAnalysis/ ~/p-fstorici3-0/rich_project_bio-storici/reference/hg38/filtered_hg38.fa ${bed} ~/p-fstorici3-0/rich_project_bio-storici/HEKnH9/bed/OG_bed/
-#norm_freq ~/p-fstorici3-0/rich_project_bio-storici/bin/RibosePreferenceAnalysis/ ~/p-fstorici3-0/rich_project_bio-storici/reference/hg38/filtered_hg38.fa ${bed} ~/p-fstorici3-0/rich_project_bio-storici/HEKnH9/bed/OG_bed/
-#resort_plot ~/p-fstorici3-0/rich_project_bio-storici/bin/RibosePreferenceAnalysis/ ~/p-fstorici3-0/rich_project_bio-storici/reference/hg38/filtered_hg38.fa ${bed} ~/p-fstorici3-0/rich_project_bio-storici/HEKnH9/bed/OG_bed/ ~/p-fstorici3-0/rich_project_bio-storici/HEKnH9/order 
-#done
-
-#scripts='/storage/home/hcoda1/5/dkundnani3/p-fstorici3-0/rich_project_bio-storici/bin/RibosePreferenceAnalysis/'
-#ref='/storage/home/hcoda1/5/dkundnani3/p-fstorici3-0/rich_project_bio-storici/reference/sacCer2/sacCer2.fa'
-# range='/storage/home/hcoda1/5/dkundnani3/p-fstorici3-0/rich_project_bio-storici/AGS/ranges/nucl.bed'
-# range='/storage/home/hcoda1/5/dkundnani3/p-fstorici3-0/rich_project_bio-storici/AGS/ranges/chrM.bed'
-# range='/storage/home/hcoda1/5/dkundnani3/p-fstorici3-0/rich_project_bio-storici/AGS/ranges/2micron.bed'
-#bed='/storage/home/hcoda1/5/dkundnani3/p-fstorici3-0/rich_project_bio-storici/AGS/bed/'
-# order='/storage/home/hcoda1/5/dkundnani3/p-fstorici3-0/rich_project_bio-storici/AGS/order'
-# bg_freq $scripts $ref $range 
-# sample_freq $scripts $ref $range $bed
-# norm_freq $scripts $ref $range $bed
-# resort_plot $scripts $ref $range $bed $order
+##############################################################################################################
 
 
 split_by_subtypes () {
@@ -87,11 +68,11 @@ sample_freq () {
         mkdir sample_freq
         mkdir sample_freq/$(basename ${3} .bed)
         for file in $(ls ${4}/*.bed); do
-        #bedtools intersect -nonamecheck -b ${3} -a ${file} > ./sample_freq/$(basename ${3} .bed)/$(basename ${file})
-        bedtools intersect -s -nonamecheck -b ${3} -a ${file} > ./sample_freq/$(basename ${3} .bed)/$(basename ${file})
+        bedtools intersect -nonamecheck -b ${3} -a ${file} > ./sample_freq/$(basename ${3} .bed)/$(basename ${file})
+        #bedtools intersect -s -nonamecheck -b ${3} -a ${file} > ./sample_freq/$(basename ${3} .bed)/$(basename ${file})
         done
         python3 ${1}/count_rNMP.py ${2} ./sample_freq/$(basename ${3} .bed)/*.bed -d -m -t -o ./sample_freq/$(basename ${3} .bed)/
-        #python3 ${1}/count_rNMP.py ${2} ./sample_freq/$(basename ${3} .bed)/*.bed --dist 0 -d -m -t -o ./sample_freq/$(basename ${3} .bed)/
+        #python3 ${1}/count_rNMP.py ${2} ./sample_freq/$(basename ${3} .bed)/*.bed --dist 0 -d -m -t -o ./sample_freq/$(basename ${3} .bed)/ #changing distance
         python3 ${1}/get_chrom.py ./sample_freq/$(basename ${3} .bed)/*.mono -s chr0 -v -o ./sample_freq/$(basename ${3} .bed)_sample.mono
         python3 ${1}/get_chrom.py ./sample_freq/$(basename ${3} .bed)/*.dinuc_d1_nr -s chr0 -v -o ./sample_freq/$(basename ${3} .bed)_sample.dinuc_d1_nr
         python3 ${1}/get_chrom.py ./sample_freq/$(basename ${3} .bed)/*.dinuc_d1_rn -s chr0 -v -o ./sample_freq/$(basename ${3} .bed)_sample.dinuc_d1_rn
@@ -130,14 +111,13 @@ resort_plot() {
 
         mkdir plots 
         for file in $(ls ./norm_freq/sorted_$(basename ${3} .bed)*mono*); do
-        python3 ${1}/draw_heatmap.py ${file} -b ./bg_freq/$(basename ${3} .bed).mono.freq --background_chrom $(basename ${3} .bed) -o ./plots/$(basename $file)
+        python3 ${1}/draw_heatmap.py ${file} -b ./bg_freq/$(basename ${3} .bed).mono.freq --background_chrom $(basename ${3} .bed) -o ./plots/$(basename $file) --palette RdBu_r
         done
         for file in $(ls ./norm_freq/sorted_$(basename ${3} .bed)*dinuc*); do
-        python3 ${1}/draw_heatmap.py ${file} -b ./bg_freq/$(basename ${3} .bed).di.freq --background_chrom $(basename ${3} .bed) -o ./plots/$(basename $file)
+        python3 ${1}/draw_heatmap.py ${file} -b ./bg_freq/$(basename ${3} .bed).di.freq --background_chrom $(basename ${3} .bed) -o ./plots/$(basename $file) --palette RdBu_r
         done
         for file in $(ls ./norm_freq/sorted_$(basename ${3} .bed)*trinuc*); do
-        python3 ${1}/draw_heatmap.py ${file} -b ./bg_freq/$(basename ${3} .bed).tri.freq --background_chrom $(basename ${3} .bed) -o ./plots/$(basename $file)
+        python3 ${1}/draw_heatmap.py ${file} -b ./bg_freq/$(basename ${3} .bed).tri.freq --background_chrom $(basename ${3} .bed) -o ./plots/$(basename $file) --palette RdBu_r
         done
 
 }
-

@@ -1,15 +1,14 @@
 #!usr/bin/env bash
-#First position argument: Location of RibosepreferredAnalysis github repository
-#Seond positional argument: Reference fasta file
-#third positional argument : Location for range files
-#fourth positional argument : location of bed files
-#fifth positional argument : location of order files
 
-source ~/p-fstorici3-0/rich_project_bio-storici/bin/RPA-wrapper/Heatmapwrapper.sh
+###################MODIFY AS PER THE BATCH RUNS ###################################
+scripts='/storage/home/hcoda1/5/dkundnani3/p-fstorici3-0/rich_project_bio-storici/bin/RibosePreferenceAnalysis/' #Locaiton for the Preference analysis scripts/ local github repository
+ref='human-genome/non-altchromosomes.fa' #Fasta file for the reference genome
+range='human-genome/nucl.bed' #bed file of ranges in the nucleus of choice of ranges
+bed='ribodataset/bedfolder/' #folder of bed files with extension .bed
+order='ribodataset/order' #Sequence of used bed file names and what you would like to append to it. Sequence should reflect the order in which you would like to have the files plotted!
 
-for bed in $(ls ~/p-fstorici3-0/rich_project_bio-storici/HEKnH9/anno/subtypes/*.bed); do
-#bg_freq ~/p-fstorici3-0/rich_project_bio-storici/bin/RibosePreferenceAnalysis/ ~/p-fstorici3-0/rich_project_bio-storici/reference/hg38/filtered_hg38.fa ${bed} 
-sample_freq ~/p-fstorici3-0/rich_project_bio-storici/bin/RibosePreferenceAnalysis/ ~/p-fstorici3-0/rich_project_bio-storici/reference/hg38/filtered_hg38.fa ${bed} ~/p-fstorici3-0/rich_project_bio-storici/HEKnH9/bed/OG_bed/
-norm_freq ~/p-fstorici3-0/rich_project_bio-storici/bin/RibosePreferenceAnalysis/ ~/p-fstorici3-0/rich_project_bio-storici/reference/hg38/filtered_hg38.fa ${bed} ~/p-fstorici3-0/rich_project_bio-storici/HEKnH9/bed/OG_bed/
-resort_plot ~/p-fstorici3-0/rich_project_bio-storici/bin/RibosePreferenceAnalysis/ ~/p-fstorici3-0/rich_project_bio-storici/reference/hg38/filtered_hg38.fa ${bed} ~/p-fstorici3-0/rich_project_bio-storici/HEKnH9/bed/OG_bed/ ~/p-fstorici3-0/rich_project_bio-storici/HEKnH9/order 
-done
+###################DO NOT MODIFY BELOW THIS LINE ###################################
+bg_freq $scripts $ref $range 
+sample_freq $scripts $ref $range $bed
+norm_freq $scripts $ref $range $bed
+resort_plot $scripts $ref $range $bed $order
