@@ -47,73 +47,53 @@
 ### Getting the code
 The development version from [GitHub](https://github.com/) with:
 ```sh
-git clone https://github.com/DKundnani/rNMP_hotspots.git
+git clone https://github.com/xph9876/RibosePreferenceAnalysis.git
+git clone https://github.com/DKundnani/RPA-wrapper.git
 ```
 ### Creating the enviroment with required dependencies
 ```sh
-conda env create --name rNMPhotspots_env --file /rNMP_hotspots/yml/r_env.yml
+conda env create --name RPAwrapper_env --file /RPA-wrapper/env.yml
 ```
 ### Additional Dependencies
 * Input files (bed) containing single nucleotide locations, mainly for rNMP data. (another single nucleotide data can also be experimented on!)
 * Reference genome files (.fa and .fai) of the organism being used(Also used to generate bed files)
-* BAM files (optional) from DNA-seq pipelines See [https://github.com/DKundnani/Omics-pipelines](https://github.com/DKundnani/Omics-pipelines)
+* ranges/bed file fo the genome locations to be analyzed and for which background frequency will be calculated as well.
+* order file, example in repository
 
 <!-- USAGE -->
 ## Usage
 ### Defining variables
 ```bash
-lib=path/to/AGS/ribo-DNA-order #First col Library name, 3rd col basename of bam files from DNA-se pipeline, 
-bed=path/to/AGS/bed
-dna=path/to/AGS/DNAseq/aligned
-normbed=path/to/AGS/norm_counts
-script=path/to/AGS/rNMP_hotspots
-genome=path/to/reference/sacCer2/sacCer2-nucl.fa.fai #size file of the genome
+scripts='path/to/RibosePreferenceAnalysis/' #location of RPA repository
+ref='path/to/reference/sacCer2/sacCer2.fa' #Reference Fast file
+range='path/to/ranges/sacCer2/nucl.bed' #Example ranges of nuclear genome of sacCer2
+#range='path/to/chrM.bed' 
+bed='path/to/bed/' #Folder of bed files
+order='path/to/order' #sample file share in the RPA-wrapper repository
 ```
-### Normalization of bed files for coverage (optional)
+### Initializing functions and activating enrviroment
 ```bash
-conda activate rNMPhotspots_env #activating enviroment
-mkdir $normbed #Creating output directory
-
-while read -r line;
-do
-   FS=$(echo $line | tr " " "\t" | cut -f1)
-   sam=$(echo $line| sed 's/\r$//' | awk '{print $3}') 
-Rscript $script/count_norm.R -r $bed/*.bed -c ${dna}/${sam}.cov -g $genome -o $normbed ;
-done < $lib > $normbed/norm.log
-
+conda activate RPAwrapper_env #activating enviroment
+source path/to/RPA-wrapper/Heatmapwrapper.sh
 ```
-### Generating matrix
+### Running the Code
 ```bash
-mkdir $normbed/hotspots #place files into the normbed folder
-cd $normbed
-#getting files per genotype
-filelist=$(cut -f3 files | uniq | tr "\n" "\t")
-for f in $filelist; do grep $f files > ${f}_files; done 
-
-thresh=2 #Minimum 2 libraries in each subtype used as threshold
-for f in $filelist; do $script/df_matrix.R -f ${f}_files -a -t $thresh -c 8 -s -o ${f}_files_${thresh}_common_EF.tsv & done #files contain library information per genotype to be grouped for finding hotspots
+mkdir heatmaps; cd heatmaps #make the output directory and run the code from it
+#Generating Background frequency of the genome
+bg_freq $scripts $ref $range #one time for each range
+sample_freq $scripts $ref $range $bed #Generating frequency of libraries/samples
+norm_freq $scripts $ref $range $bed #Normalizing sample frequency to genome frequency
+resort_plot $scripts $ref $range $bed $order #resort the matrices as per order file and hence the heatmaps
 ```
-### Getting common hotspots for each genotype using different thresholds and visualization
+### Statistical test for preference and genotype comparisons
 ```bash
-mv *tsv* ./hotspots/
-cd hotspots
-top=25 #Getting top 25 hotspots
-for f in $filelist; do Rscript $script/plot_hotspots.R -m ${f}_files*all -c -g $genome -r BSgenome.Scerevisiae.UCSC.sacCer2 -t $top -v -o . & done
-
-#Getting top fraction of hotspots
-for thresh in 0.05 0.02 0.01 ; do
-for f in $filelist; do Rscript $script/plot_hotspots.R -m ${f}_files*all -c -g $genome -r BSgenome.Scerevisiae.UCSC.sacCer2 -t $thresh -o . & done
-done
-
+mww $scripts $ref $range $bed $order
 ```
-### GGseqlogo plots (MEME plots)
+
+### Generating Stacket barplots for hotspots
 ```bash
-for thresh in 0.05 0.02 0.01 ; do
-for f in $filelist; do Rscript $script/meme.R -f ${f}_files*${thresh}*top* -c 9 & done #ggseqlogo plots
-done
+Rscript path/to/RPA-wrapper/comp.R -m sorted_chrM_mono_0 #hotspot composition files usually contain on entry for every genotype.
 ```
-### Additional visualizations
-See stacked barplots for composition in [RPA-wrapper](https://github.com/DKundnani/RPA-wrapper)
 
 
 <!-- CONTRIBUTING -->
