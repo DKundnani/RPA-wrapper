@@ -29,11 +29,10 @@
     <li><a href="##Usage">Usage</a></li>
       <ul>
         <li><a href="###Defining-variables">Defining variables</a></li>
-        <li><a href="###Normalization-of-bed-files-for-coverage-(optional)">Normalization of bed files for coverage (optional)</a></li>
-        <li><a href="###Generating-matrix">Generating matrix</a></li>
-       <li><a href="###Getting-common-hotspots-for-each-genotype-using-different-thresholds-and-visualization">Getting common hotspots for each genotype using different thresholds and visualization</a></li>
-        <li><a href="###GGseqlogo-plots-(MEME plots)">GGseqlogo plots (MEME plots)</a></li>
-        <li><a href="###Additional-visualizations">Additional visualizations</a></li>
+        <li><a href="Initializing-functions-and-activating-enrviroment">Initializing functions and activating enrviroment</a></li>
+        <li><a href="###Running-the-Code">Running the Code</a></li>
+       <li><a href="###Statistical-test-for-preference-and-genotype-comparisons">Statistical test for preference and genotype comparisons</a></li>
+        <li><a href="###Generating-Stacked-barplots-for-hotspots">Generating Stacked barplots for hotspots</a></li>
       </ul>
     <li><a href="##Contributing">Contributing</a></li>
     <li><a href="##License">License</a></li>
@@ -90,7 +89,7 @@ resort_plot $scripts $ref $range $bed $order #resort the matrices as per order f
 mww $scripts $ref $range $bed $order
 ```
 
-### Generating Stacket barplots for hotspots
+### Generating Stacked barplots for hotspots
 ```bash
 Rscript path/to/RPA-wrapper/comp.R -m sorted_chrM_mono_0 #hotspot composition files usually contain on entry for every genotype.
 ```
