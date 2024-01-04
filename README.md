@@ -1,7 +1,6 @@
 
-<h1 align="center">rNMP Hotpsots</h1>
-To obtain rNMP hotspots(locations of highly abundant rNMPs) using a percentage or poisson pvalue threshold and map on respective reference genomes. 
-
+<h1 align="center">RPA-wrapper</h1>
+RPA([Ribose Preferred Analysis](https://github.com/xph9876/RibosePreferenceAnalysis)) Wrapper
 <!-- Improved compatibility of back to top link: See: https://github.com/othneildrew/Best-README-Template/pull/73 -->
 <a name="readme-top"></a>
 <!--
