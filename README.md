@@ -151,9 +151,6 @@ Deepali L. Kundnani - [deepali.kundnani@gmail.com](mailto::deepali.kundnani@gmai
 <!-- ACKNOWLEDGMENTS -->
 ## Citations
 Use this space to list resources you find helpful and would like to give credit to. I've included a few of my favorites to kick things off!+
-* <b> Light-strand bias and enriched zones of embedded ribonucleotides are associated with DNA replication and transcription in the human-mitochondrial genome. </b>
-Penghao Xu, Taehwan Yang, Deepali L Kundnani, Mo Sun, Stefania Marsili, Alli L Gombolay, Youngkyu Jeon, Gary Newnam, Sathya Balachander, Veronica Bazzani, Umberto Baccarani, Vivian S Park, Sijia Tao, Adriana Lori, Raymond F Schinazi, Baek Kim, Zachary F Pursell, Gianluca Tell, Carlo Vascotto, Francesca Storici
-<i>  Acids Research </i> 2023;, gkad1204, [https://doi.org/10.1093/nar/gkad1204](https://doi.org/10.1093/nar/gkad1204)
 * <b> Distinct features of ribonucleotides within genomic DNA in Aicardi-Goutières syndrome (AGS)-ortholog mutants of <i>Saccharomyces cerevisiae</i> </b>
 Deepali L. Kundnani, Taehwan Yang, Alli L. Gombolay, Kuntal Mukherjee, Gary Newnam, Chance Meers, Zeel H. Mehta, Celine Mouawad, Francesca Storici
 bioRxiv 2023.10.02.560505; doi:[https://doi.org/10.1101/2023.10.02.560505]( https://doi.org/10.1101/2023.10.02.560505)
@@ -165,20 +162,20 @@ bioRxiv 2023.10.02.560505; doi:[https://doi.org/10.1101/2023.10.02.560505]( http
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/DKundnani/rNMP_hotspots?style=for-the-badge
-[contributors-url]: https://github.com/DKundnani/rNMP_hotspots/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/DKundnani/rNMP_hotspots?style=for-the-badge
-[forks-url]: https://github.com/DKundnani/rNMP_hotspots/forks
-[stars-shield]: https://img.shields.io/github/stars/DKundnani/rNMP_hotspots?style=for-the-badge
-[stars-url]: https://github.com/DKundnani/rNMP_hotspots/stargazers
-[issues-shield]: https://img.shields.io/github/issues/DKundnani/rNMP_hotspots?style=for-the-badge
-[issues-url]: https://github.com/DKundnani/rNMP_hotspots/issues
-[license-shield]: https://img.shields.io/github/license/DKundnani/rNMP_hotspots?style=for-the-badge
-[license-url]: https://github.com/DKundnani/rNMP_hotspots/blob/master/LICENSE.txt
+[contributors-shield]: https://img.shields.io/github/contributors/DKundnani/RPA-wrapper?style=for-the-badge
+[contributors-url]: https://github.com/DKundnani/RPA-wrapper/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/DKundnani/RPA-wrapper?style=for-the-badge
+[forks-url]: https://github.com/DKundnani/RPA-wrapper/forks
+[stars-shield]: https://img.shields.io/github/stars/DKundnani/RPA-wrapper?style=for-the-badge
+[stars-url]: https://github.com/DKundnani/RPA-wrapper/stargazers
+[issues-shield]: https://img.shields.io/github/issues/DKundnani/RPA-wrapper?style=for-the-badge
+[issues-url]: https://github.com/DKundnani/RPA-wrapper/issues
+[license-shield]: https://img.shields.io/github/license/DKundnani/RPA-wrapper?style=for-the-badge
+[license-url]: https://github.com/DKundnani/RPA-wrapper/blob/master/LICENSE.txt
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/deepalik
 [product-screenshot]: images/screenshot.png
-[commits-url]: https://github.com/DKundnani/rNMP_hotspots/pulse
-[commits-shield]: https://img.shields.io/github/commit-activity/t/DKundnani/rNMP_hotspots?style=for-the-badge
+[commits-url]: https://github.com/DKundnani/RPA-wrapper/pulse
+[commits-shield]: https://img.shields.io/github/commit-activity/t/DKundnani/RPA-wrapper?style=for-the-badge
 [website-shield]: https://img.shields.io/website?url=http%3A%2F%2Fdkundnani.bio%2F&style=for-the-badge
 [website-url]:http://dkundnani.bio/ 
