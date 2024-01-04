@@ -1,6 +1,6 @@
 
 <h1 align="center">RPA-wrapper</h1>
-RPA([Ribose Preferred Analysis](https://github.com/xph9876/RibosePreferenceAnalysis)) Wrapper
+<a href="https://github.com/xph9876/RibosePreferenceAnalysis">[Ribose Preferred Analysis</a>
 <!-- Improved compatibility of back to top link: See: https://github.com/othneildrew/Best-README-Template/pull/73 -->
 <a name="readme-top"></a>
 <!--
