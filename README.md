@@ -75,7 +75,7 @@ order='path/to/order' #sample file share in the RPA-wrapper repository
 conda activate RPAwrapper_env #activating enviroment
 source path/to/RPA-wrapper/Heatmapwrapper.sh
 ```
-### Running the Code
+### Running the Code for both strands
 ```bash
 mkdir heatmaps; cd heatmaps #make the output directory and run the code from it
 #Generating Background frequency of the genome
@@ -83,7 +83,20 @@ bg_freq $scripts $ref $range #one time for each range
 sample_freq $scripts $ref $range $bed #Generating frequency of libraries/samples
 norm_freq $scripts $ref $range $bed #Normalizing sample frequency to genome frequency
 resort_plot $scripts $ref $range $bed $order #resort the matrices as per order file and hence the heatmaps
+rm sample_freq/$(basename $range .bed)/*bed #Cleanup
 ```
+
+### Running the Code for single strand - gives out same and opposite for the range with 6th column having strand information
+```bash
+mkdir heatmaps; cd heatmaps #make the output directory and run the code from it
+#Generating Background frequency of the genome
+bg_freq_ss $scripts $ref $range ; bg_freq_os $scripts $ref $range
+sample_freq_ss $scripts $ref $range $bed ; sample_freq_os $scripts $ref $range $bed
+norm_freq_ss $scripts $ref $range $bed ; norm_freq_os $scripts $ref $range $bed
+resort_plot_ss $scripts $ref $range $bed $order ; resort_plot_os $scripts $ref $range $bed $order
+rm sample_freq/$(basename $range .bed)/*bed #Cleanup
+```
+
 ### Statistical test for preference and genotype comparisons
 ```bash
 mww $scripts $ref $range $bed $order
