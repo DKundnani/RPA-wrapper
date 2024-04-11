@@ -49,11 +49,10 @@ u=opt$usebascol
 #3.Calculating Mann whitney P-values
 writeLines("\n...Calculating pvalues with baseline reference...\n")
 groups=order[rownames(order),][,opt$groupcol]
-head=c('Comparisons','all',unique(groups))
-combn=t(combn(unique(rownames(df)),2))
+head=c('Comparisons',colnames(df))
 #For all
-
-for (n in seq(1:nrow(combn))) {
+add='all'
+for (n in seq(1:ncol(df))) {
     if (u >= 1) {
         p=wilcox.test(df[,n],df[,u], alternative = c("greater"), exact=T)$p.value
     } else {
@@ -72,7 +71,7 @@ for (celltype in unique(groups)) {
         } else {
             p=wilcox.test(sub[,n],rep(baseline,nrow(sub)), alternative = c("greater"), exact=T)$p.value
         }
-    add=c(add,p)
+        add=c(add,p)
     }
     out=rbind(out, add)
 }

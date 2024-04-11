@@ -6,6 +6,8 @@ library("optparse")
 option_list = list(
   make_option(c("-m", "--mat"), type="character", default=NULL, 
               help="sorted matrix with labels on one site and things to be plotted on another", metavar="filetype"),
+   make_option(c("-l", "--libinfo"), type="character", default=NULL, 
+              help="lib \t cell \t RE", metavar="filetype"),
   make_option(c("-t", "--trans"), action = "store_true", default = FALSE,
               help="columns are x axis and rows are y axis", metavar="filetype"),
   make_option(c("-c", "--hex"), type="character", default="#D55E00,#0072B2,#F0E442,#009E73", 
@@ -29,11 +31,11 @@ mat=opt$mat #mat="sorted_nucl_mono_0"
 
 transp=opt$t #transp=NULL
 writeLines(paste("Input matrix name:", opt$mat))
-if (is.null(opt$mat)){
+if (is.null(opt$libinfo)){
   print_help(opt_parser)
   stop("Please specify hex codes for legend with a #.n", call.=FALSE)
 }
-
+libinfo=opt$libinfo
 #writeLines(paste("Bin width used:", opt$bin_width))
 #writeLines(paste("Maximum limit of yaxis:", opt$y_max))
 
@@ -58,46 +60,43 @@ writeLines("\n...Defining required functions...\n")
 
 #3. Preprocessing input 
 writeLines("...Preprocessing input(s)...")
-QC<-read.table(mat,row.names=1,sep="\t",header=T)
-if (transp) {QC=data.frame(t(QC))}
-
+comp<-read.table(mat,row.names=1,sep="\t",header=T)
+comp=comp*100
+lib<-read.table(libinfo,row.names=1,sep="\t",header=F)[1]
+colnames(lib)="Group"
+df=merge(comp,lib,by.x = 0, by.y=0)
+df$Group <- factor(df$Group, levels = unique(lib$Group))
 col=opt$hex #col="#D55E00,#0072B2,#F0E442,#009E73"
 col=unlist(str_split(col,","))
 
-
-#QC=QC/rowSums(QC)*100
-QC$Lab=rownames(QC)
 #4.Main code
 writeLines("\n... Executing Main Code...\n")
-perc=gather(QC,"key","value",-Lab)
-
+data=gather(df,key="rNTP", value = "Percentage", -c(Group,Row.names))
+data[data$rNTP == 'T','rNTP'] ='U'
+data$rNTP=paste('r',data$rNTP, sep="")
 #5.Plotting
 #writeLines("...Plotting...")
 
-
-png("Horizontal_stacked.png", width=12, height=8,units= "in",  res=1000,bg="transparent" )
-ggplot(perc, aes(x=Lab, y=value, fill=forcats::fct_rev(key)))+
-  geom_bar(stat="identity", position="fill", width = 0.9)+
-  #geom_text(aes(label=paste(round(perc$value, digits=2),"%", sep="")), position=position_stack(vjust=0.5), size=3, fontface="bold")+
-  geom_text(aes(label=scales::percent(value, accuracy=0.1)), position=position_stack(vjust=0.5), size=4.5, fontface="bold")+
-  #geom_text(aes(label=value),nudge_y= -.01, color="black",size = 5,fontface="bold", )+
-  coord_flip(clip = "off")+
-  scale_fill_manual(labels = rev(levels(factor(perc$key))),values=rev(col))+#c("#517AC9","#C05D5D"))+
-  scale_x_discrete(limits=rev(perc$Lab),labels= rev(perc$Lab))+
-  scale_y_continuous(expand = c(0,0),labels = scales::percent_format())+
-  ggtitle(" ")+
-  ylab(" ")+
-  xlab("")+
-  theme_classic()+
-  theme(legend.background = element_rect(fill="transparent"), #element_rect(fill = "transparent",colour = NA),
-        legend.key=element_rect(colour="transparent"), #legend.key = element_rect(fill = "transparent"), 
-        legend.key.size = unit(0.5, "cm"),
-        panel.border = element_blank(), 
-        axis.text = element_text(size=16, colour = "black"),
-        axis.ticks = element_line(size=0.8,color = "black"),
-        axis.line = element_line(size=0.6,color = "black"),
-        plot.margin = unit(c(1, 1, 0.0, 0.0), "cm")) #t, r, b, l
+png(paste(mat,"_barplts.png",sep=""),width=length(unique(lib$Group))*2.2, height=5,units= "in",  res=600,bg="transparent")
+obj<-ggbarplot(data, x = "Group", y = "Percentage", fill="rNTP",
+              add = c("mean_se"),
+              add.params=list(width=0.4,size=0.5),
+              palette = c("#D55E00","#0072B2", "#F0E442","#009E73"),
+              position = position_dodge(0.75), 
+              xlab="", ylab="Normalized Percentage", 
+              width = 0.75,
+              size = 0.5) +
+  geom_point(data,mapping=aes(Group,Percentage,color=rNTP), position=position_dodge(0.75),size=1)+guides(color = "none")+
+  scale_color_manual(values=c("black","black","black","black"))+
+  scale_y_continuous(expand = c(0,0),limits = c(0,100), breaks = seq(0,100,10)) +
+  theme_classic(base_size = 20, base_family = "Arial")+ 
+  theme(text=element_text(colour ="black", family = 'Arial', size=25), axis.text = element_text(colour = "black"),
+        plot.margin = unit(c(0.5, 0.0, 0.0, 0.0), "cm") #t, r, b, l 
+        ) +
+  scale_x_discrete(labels = function(x) str_wrap(x, width = 10))
+p=ggpar(obj, legend=c("right"), legend.title = "")
+print(p)
 dev.off()
 
 writeLines("\nJob Finished.\n")
-writeLines(paste("Output files in current folder"))
+writeLines(paste("Output files in same folder as the input matrix file"))
