@@ -77,7 +77,7 @@ data$rNTP=paste('r',data$rNTP, sep="")
 #5.Plotting
 #writeLines("...Plotting...")
 
-png(paste(mat,"_barplts.png",sep=""),width=length(unique(lib$Group))*2.2, height=5,units= "in",  res=600,bg="transparent")
+png(paste(mat,"_barplts.png",sep=""),width=length(unique(lib$Group))*2.2, height=7,units= "in",  res=600,bg="transparent")
 obj<-ggbarplot(data, x = "Group", y = "Percentage", fill="rNTP",
               add = c("mean_se"),
               add.params=list(width=0.4,size=0.5),
@@ -90,7 +90,8 @@ obj<-ggbarplot(data, x = "Group", y = "Percentage", fill="rNTP",
   scale_color_manual(values=c("black","black","black","black"))+
   scale_y_continuous(expand = c(0,0),limits = c(0,100), breaks = seq(0,100,10)) +
   theme_classic(base_size = 20, base_family = "Arial")+ 
-  theme(text=element_text(colour ="black", family = 'Arial', size=25), axis.text = element_text(colour = "black"),
+  theme(#text=element_text(colour ="black", family = 'Arial', size=25), axis.text = element_text(colour = "black"),
+  axis.text.x=element_text(color="black",size=20,angle = 0, vjust = 1, hjust=0.5),axis.text.y=element_text(color="black",size=25),
         plot.margin = unit(c(0.5, 0.0, 0.0, 0.0), "cm") #t, r, b, l 
         ) +
   scale_x_discrete(labels = function(x) str_wrap(x, width = 10))

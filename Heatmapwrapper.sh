@@ -338,6 +338,39 @@ mww() {
         Rscript $SCRIPT_DIR/mww.R -f ./norm_freq/sorted_$(basename ${3} .bed)_trinuc_rnn_16 -m ${6} -n ${7} -b 0.0625 -g ${8} -o ./mww/$(basename ${3} .bed)_trinuc_rnn_16_mww_pval.tsv
 }
 
+mww_same() {
+        #$1=Location of Scripts/git repo
+        #$2=Ref fasta
+        #$3=bed12 file of ranges
+        #$4=location of bed files
+        #$5=order file
+        mkdir mww
+        SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+        Rscript $SCRIPT_DIR/mww.R -f ./norm_freq/sorted_$(basename ${3} .bed)_same_mono_0 -m ${6} -n ${7} -b 0.25 -g ${8} -o ./mww/$(basename ${3} .bed)_same_mono_0_mww_pval.tsv
+        Rscript $SCRIPT_DIR/mww.R -f ./norm_freq/sorted_$(basename ${3} .bed)_same_dinuc_nr_4 -m ${6} -n ${7} -b 0.25 -g ${8} -o ./mww/$(basename ${3} .bed)_same_dinuc_nr_4_mww_pval.tsv
+        Rscript $SCRIPT_DIR/mww.R -f ./norm_freq/sorted_$(basename ${3} .bed)_same_dinuc_rn_4 -m ${6} -n ${7} -b 0.25 -g ${8} -o ./mww/$(basename ${3} .bed)_same_dinuc_rn_4_mww_pval.tsv
+        Rscript $SCRIPT_DIR/mww.R -f ./norm_freq/sorted_$(basename ${3} .bed)_same_trinuc_nnr_16 -m ${6} -n ${7} -b 0.0625 -g ${8} -o ./mww/$(basename ${3} .bed)_same_trinuc_nnr_16_mww_pval.tsv
+        Rscript $SCRIPT_DIR/mww.R -f ./norm_freq/sorted_$(basename ${3} .bed)_same_trinuc_nrn_16 -m ${6} -n ${7} -b 0.0625 -g ${8} -o ./mww/$(basename ${3} .bed)_same_trinuc_nrn_16_mww_pval.tsv
+        Rscript $SCRIPT_DIR/mww.R -f ./norm_freq/sorted_$(basename ${3} .bed)_same_trinuc_rnn_16 -m ${6} -n ${7} -b 0.0625 -g ${8} -o ./mww/$(basename ${3} .bed)_same_trinuc_rnn_16_mww_pval.tsv
+}
+
+mww_opp() {
+        #$1=Location of Scripts/git repo
+        #$2=Ref fasta
+        #$3=bed12 file of ranges
+        #$4=location of bed files
+        #$5=order file
+        mkdir mww
+        SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+        Rscript $SCRIPT_DIR/mww.R -f ./norm_freq/sorted_$(basename ${3} .bed)_opp_mono_0 -m ${6} -n ${7} -b 0.25 -g ${8} -o ./mww/$(basename ${3} .bed)_opp_mono_0_mww_pval.tsv
+        Rscript $SCRIPT_DIR/mww.R -f ./norm_freq/sorted_$(basename ${3} .bed)_opp_dinuc_nr_4 -m ${6} -n ${7} -b 0.25 -g ${8} -o ./mww/$(basename ${3} .bed)_opp_dinuc_nr_4_mww_pval.tsv
+        Rscript $SCRIPT_DIR/mww.R -f ./norm_freq/sorted_$(basename ${3} .bed)_opp_dinuc_rn_4 -m ${6} -n ${7} -b 0.25 -g ${8} -o ./mww/$(basename ${3} .bed)_opp_dinuc_rn_4_mww_pval.tsv
+        Rscript $SCRIPT_DIR/mww.R -f ./norm_freq/sorted_$(basename ${3} .bed)_opp_trinuc_nnr_16 -m ${6} -n ${7} -b 0.0625 -g ${8} -o ./mww/$(basename ${3} .bed)_opp_trinuc_nnr_16_mww_pval.tsv
+        Rscript $SCRIPT_DIR/mww.R -f ./norm_freq/sorted_$(basename ${3} .bed)_opp_trinuc_nrn_16 -m ${6} -n ${7} -b 0.0625 -g ${8} -o ./mww/$(basename ${3} .bed)_opp_trinuc_nrn_16_mww_pval.tsv
+        Rscript $SCRIPT_DIR/mww.R -f ./norm_freq/sorted_$(basename ${3} .bed)_opp_trinuc_rnn_16 -m ${6} -n ${7} -b 0.0625 -g ${8} -o ./mww/$(basename ${3} .bed)_opp_trinuc_rnn_16_mww_pval.tsv
+}
+
+
 ttest() {
         #$1=Location of Scripts/git repo
         #$2=Ref fasta
