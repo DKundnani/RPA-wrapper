@@ -85,7 +85,7 @@ bg_freq_os () {
         #Usage2: bg_freq ~/p-fstorici3-0/rich_project_bio-storici/bin/RibosePreferenceAnalysis/ ~/p-fstorici3-0/rich_project_bio-storici/reference/sacCer2/sacCer2.fa ~/p-fstorici3-0/rich_project_bio-storici/AGS/ranges/chrM.bed
 
         mkdir -p bg_freq
-        bedtools getfasta -s -fi ${2} -bed ${3} > ./bg_freq/$(basename ${3} .bed)_opp.fa
+        awk 'OFS="\t" {if($6=="+") print $1, $2, $3, $4, $5, "-"; else print $1, $2, $3, $4, $5, "+"}' ${3} | bedtools getfasta -s -fi ${2} -bed - > ./bg_freq/$(basename ${3} .bed)_opp.fa
         python3 ${1}/count_background.py ./bg_freq/$(basename ${3} .bed)_opp.fa -s -o ./bg_freq/$(basename ${3} .bed)_opp.di
         python3 ${1}/get_chrom.py ./bg_freq/$(basename ${3} .bed)_opp.di -s chr0 -v -o ./bg_freq/$(basename ${3} .bed)_opp.di.freq
         python3 ${1}/count_background.py ./bg_freq/$(basename ${3} .bed)_opp.fa -s --mono -o ./bg_freq/$(basename ${3} .bed)_opp.mono
@@ -113,8 +113,7 @@ sample_freq () {
         python3 ${1}/get_chrom.py ./sample_freq/$(basename ${3} .bed)/*.dinuc_d1_rn -s chr0 -v -o ./sample_freq/$(basename ${3} .bed)_sample.dinuc_d1_rn
         python3 ${1}/get_chrom.py ./sample_freq/$(basename ${3} .bed)/*.trinuc_nnr -s chr0 -v -o ./sample_freq/$(basename ${3} .bed)_sample.trinuc_nnr
         python3 ${1}/get_chrom.py ./sample_freq/$(basename ${3} .bed)/*.trinuc_nrn -s chr0 -v -o ./sample_freq/$(basename ${3} .bed)_sample.trinuc_nrn
-        python3 ${1}/get_chrom.py ./sample_freq/$(basename ${3} .bed)/*.trinuc_rnn -s chr0 -v -o ./sample_freq/$(basename ${3} .bed)_sample.trinuc_rnn
-        
+        python3 ${1}/get_chrom.py ./sample_freq/$(basename ${3} .bed)/*.trinuc_rnn -s chr0 -v -o ./sample_freq/$(basename ${3} .bed)_sample.trinuc_rnn        
 }
 
 sample_freq_ss () {
@@ -360,6 +359,9 @@ mww_opp() {
         #$3=bed12 file of ranges
         #$4=location of bed files
         #$5=order file
+        #$6=liborder
+        #$7=column of labels in liborder
+        #$8=column of groups in liborder
         mkdir mww
         SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
         Rscript $SCRIPT_DIR/mww.R -f ./norm_freq/sorted_$(basename ${3} .bed)_opp_mono_0 -m ${6} -n ${7} -b 0.25 -g ${8} -o ./mww/$(basename ${3} .bed)_opp_mono_0_mww_pval.tsv
@@ -388,15 +390,20 @@ ttest() {
 }
 
 mww_diff() {
-        #$1=file 1
-        #$2=file 2
-        #$3=order file
+        #$1=Location of Scripts/git repo
+        #$2=Ref fasta
+        #$3=bed12 file of range 1
+        #$4=bed12 file of range 2
+        #$5=order file
+        #$6=liborder
+        #$7=column of labels in liborder
+        #$8=column of groups in liborder
         mkdir mww_diff
         SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
-        Rscript $SCRIPT_DIR/mww.R -f ./norm_freq/sorted_$(basename ${3} .bed)_mono_0 -m ${6} -n ${7} -b 0.25 -g ${8} -o ./mww/$(basename ${3} .bed)_mono_0_mww_pval.tsv
-        Rscript $SCRIPT_DIR/mww.R -f ./norm_freq/sorted_$(basename ${3} .bed)_dinuc_nr_4 -m ${6} -n ${7} -b 0.25 -g ${8} -o ./mww/$(basename ${3} .bed)_dinuc_nr_4_mww_pval.tsv
-        Rscript $SCRIPT_DIR/mww.R -f ./norm_freq/sorted_$(basename ${3} .bed)_dinuc_rn_4 -m ${6} -n ${7} -b 0.25 -g ${8} -o ./mww/$(basename ${3} .bed)_dinuc_rn_4_mww_pval.tsv
-        Rscript $SCRIPT_DIR/mww.R -f ./norm_freq/sorted_$(basename ${3} .bed)_trinuc_nnr_16 -m ${6} -n ${7} -b 0.0625 -g ${8} -o ./mww/$(basename ${3} .bed)_trinuc_nnr_16_mww_pval.tsv
-        Rscript $SCRIPT_DIR/mww.R -f ./norm_freq/sorted_$(basename ${3} .bed)_trinuc_nrn_16 -m ${6} -n ${7} -b 0.0625 -g ${8} -o ./mww/$(basename ${3} .bed)_trinuc_nrn_16_mww_pval.tsv
-        Rscript $SCRIPT_DIR/mww.R -f ./norm_freq/sorted_$(basename ${3} .bed)_trinuc_rnn_16 -m ${6} -n ${7} -b 0.0625 -g ${8} -o ./mww/$(basename ${3} .bed)_trinuc_rnn_16_mww_pval.tsv
+        Rscript $SCRIPT_DIR/mww_diff.R -f ./norm_freq/sorted_$(basename ${3} .bed)_mono_0 -F ./norm_freq/sorted_$(basename ${4} .bed)_mono_0 -m ${6} -n ${7} -b 0.25 -g ${8} -o ./mww_diff/$(basename ${3} .bed)_mono_0_mww_pval.tsv
+        Rscript $SCRIPT_DIR/mww_diff.R -f ./norm_freq/sorted_$(basename ${3} .bed)_dinuc_nr_4 -F ./norm_freq/sorted_$(basename ${4} .bed)_dinuc_nr_4 -m ${6} -n ${7} -b 0.25 -g ${8} -o ./mww_diff/$(basename ${3} .bed)_dinuc_nr_4_mww_pval.tsv
+        Rscript $SCRIPT_DIR/mww_diff.R -f ./norm_freq/sorted_$(basename ${3} .bed)_dinuc_rn_4 -F ./norm_freq/sorted_$(basename ${4} .bed)_dinuc_rn_4 -m ${6} -n ${7} -b 0.25 -g ${8} -o ./mww_diff/$(basename ${3} .bed)_dinuc_rn_4_mww_pval.tsv
+        Rscript $SCRIPT_DIR/mww_diff.R -f ./norm_freq/sorted_$(basename ${3} .bed)_trinuc_nnr_16 -F ./norm_freq/sorted_$(basename ${4} .bed)_trinuc_nnr_16 -m ${6} -n ${7} -b 0.0625 -g ${8} -o ./mww_diff/$(basename ${3} .bed)_trinuc_nnr_16_mww_pval.tsv
+        Rscript $SCRIPT_DIR/mww_diff.R -f ./norm_freq/sorted_$(basename ${3} .bed)_trinuc_nnr_16 -F ./norm_freq/sorted_$(basename ${4} .bed)_trinuc_nnr_16 -m ${6} -n ${7} -b 0.0625 -g ${8} -o ./mww_diff/$(basename ${3} .bed)_trinuc_nnr_16_mww_pval.tsv
+        Rscript $SCRIPT_DIR/mww_diff.R -f ./norm_freq/sorted_$(basename ${3} .bed)_trinuc_rnn_16 -F ./norm_freq/sorted_$(basename ${4} .bed)_trinuc_rnn_16 -m ${6} -n ${7} -b 0.0625 -g ${8} -o ./mww_diff/$(basename ${3} .bed)_trinuc_rnn_16_mww_pval.tsv
 }

@@ -53,23 +53,22 @@ head=c("Cellline",colnames(df1))
 #For all
 add=c("all")
 for (n in seq(1:ncol(df1))) {
-    p=wilcox.test(df1[,n],df2[,n], alternative = c("greater"), exact=T)$p.value
-    add=c(add,p)
+  p=wilcox.test(df1[,n],df2[,n], exact=T)$p.value
+  add=c(add,p)
 }
+
 out=rbind(head, add)
 #For celltypes
 for (celltype in unique(groups)) {
-    sub1=df1[groups==celltype,]
-    sub2=df2[groups==celltype,]
-
-    add=celltype
-    for (n in seq(1:ncol(sub1))) {
-        p=wilcox.test(sub1[,n],sub2[,n], exact=T)$p.value
-        add=c(add,p)
-    }
-    out=rbind(out, add)
+  sub1=df1[groups==celltype,]
+  sub2=df2[groups==celltype,]
+  add=celltype
+  for (n in seq(1:ncol(sub1))) {
+    p=wilcox.test(sub1[,n],sub2[,n], exact=T)$p.value
+    add=c(add,p)
+  }
+  out=rbind(out, add)
 }
-
 
 #3.Calculating Mann whitney P-values
 writeLines("\n...Generating output files...\n")
